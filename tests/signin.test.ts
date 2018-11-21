@@ -1,4 +1,4 @@
-import { Selector, ClientFunction } from 'testcafe'
+import { ClientFunction } from 'testcafe'
 
 const getLocation = ClientFunction(() => document.location.href)
 

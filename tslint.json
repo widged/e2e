@@ -1,0 +1,22 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint-config-airbnb"
+  ],
+  "jsRules": {},
+  "rules": {
+    "semicolon": [true, "never", "ignore-interfaces"],
+    "object-shorthand-properties-first": false,
+    "prefer-array-literal": false,
+    "import-name": false,
+    "variable-name": [true, "check-format", "allow-pascal-case"],
+    "no-unused-variable": false
+  },
+  "rulesDirectory": [],
+  "include": [
+    "tests/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
