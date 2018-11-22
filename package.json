@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "testcafe chrome ./tests/**/*.ts",
+    "test": "testcafe chrome ./src/tests/**/*.ts",
     "lint": "tslint --project ."
   },
   "dependencies": {

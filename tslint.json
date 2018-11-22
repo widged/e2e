@@ -10,7 +10,8 @@
     "prefer-array-literal": false,
     "import-name": false,
     "variable-name": [true, "check-format", "allow-pascal-case"],
-    "no-unused-variable": false
+    "no-unused-variable": false,
+    "ter-func-call-spacing": false
   },
   "rulesDirectory": [],
   "include": [
