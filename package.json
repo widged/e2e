@@ -4,11 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "e2e": "testcafe chrome ./tests/**/*.ts",
+    "test": "testcafe chrome ./tests/**/*.ts",
     "lint": "tslint --project ."
   },
   "dependencies": {
     "testcafe": "^0.23.1",
+    "testcafe-react-selectors": "^3.0.0",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.1"
   }
