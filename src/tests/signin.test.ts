@@ -1,15 +1,15 @@
 import { ClientFunction } from 'testcafe'
 import { waitForReact, ReactSelector } from 'testcafe-react-selectors'
 
-import { signin } from '../common'
-import config from '../../config'
+import { signin, createTestUser, deleteTestUser } from '../common'
+import config from '../config'
 
 const { baseUrl } = config
 const getLocation = ClientFunction(() => window.location.href)
 
 fixture('Signin')
   .page(baseUrl)
-  .beforeEach(async () => {
+  .beforeEach(async (t) => {
     await waitForReact()
   })
 
@@ -22,24 +22,34 @@ test('Login fails with "missing credentials" error message', async (t) => {
 
 test('Login fails with "unknown username" error message', async (t) => {
   await t
-    .typeText('input[name="username"]', 'this user doesnt exist')
+    .typeText('input[name="username"]', 'XXX')
     .typeText('input[name="password"]', 'password')
     .click('button[type="submit"]')
     .expect(ReactSelector('MessageContent').textContent)
     .contains('Unknown username')
 })
 
-test('Login fails with "incorrect password" error message', async (t) => {
-  await t
-    .typeText('input[name="username"]', 'mike86')
-    .typeText('input[name="password"]', 'incorrect password')
-    .click('button[type="submit"]')
-    .expect(ReactSelector('MessageContent').textContent)
-    .contains('Incorrect password')
-})
+test
+  .before(async () => {
+    await createTestUser()
+    await waitForReact()
+  })
+  ('Login fails with "incorrect password" error message', async (t) => {
+    await t
+      .typeText('input[name="username"]', 'mike86')
+      .typeText('input[name="password"]', 'incorrect password')
+      .click('button[type="submit"]')
+      .expect(ReactSelector('MessageContent').textContent)
+      .contains('Incorrect password')
+  })
+  .after(async () => {
+    await deleteTestUser()
+  })
 
 test
   .before(async () => {
+    await createTestUser()
+    await waitForReact()
     await signin()
   })
   ('Login successful and uses corresponding user data', async (t) => {
@@ -47,11 +57,16 @@ test
       .expect(getLocation())
       .eql(`${baseUrl}/home/todos`)
       .expect(ReactSelector('Image').withProps('avatar', true).getAttribute('src'))
-      .eql('https://www.deshdoot.com/wp-content/uploads/2018/06/user.png')
+      .eql('https://i.imgur.com/tJMeWCe.png')
+  })
+  .after(async () => {
+    await deleteTestUser()
   })
 
 test
   .before(async () => {
+    await createTestUser()
+    await waitForReact()
     await signin()
   })
   ('When signed in allow access to protected routes', async (t) => {
@@ -62,6 +77,9 @@ test
     await t
       .expect(getLocation())
       .eql(`${baseUrl}/home/todos`)
+  })
+  .after(async () => {
+    await deleteTestUser()
   })
 
 test('When not signed in don\'t allow access to protected routes', async (t) => {
@@ -74,6 +92,8 @@ test('When not signed in don\'t allow access to protected routes', async (t) => 
 
 test
   .before(async () => {
+    await createTestUser()
+    await waitForReact()
     await signin()
   })
   ('Able to signout successfully', async (t) => {
@@ -85,4 +105,7 @@ test
     await t
       .expect(getLocation())
       .eql(`${baseUrl}/signin`)
+  })
+  .after(async () => {
+    await deleteTestUser()
   })

@@ -8,8 +8,11 @@
     "lint": "tslint --project ."
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "testcafe": "^0.23.1",
-    "testcafe-react-selectors": "^3.0.0",
+    "testcafe-react-selectors": "^3.0.0"
+  },
+  "devDependencies": {
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.1"
   }
