@@ -15,16 +15,16 @@ fixture('Signin')
 
 test('Login fails with "missing credentials" error message', async (t) => {
   await t
-    .click('button[type="submit"]')
+    .click(ReactSelector('Button').withProps('type', 'submit'))
     .expect(ReactSelector('MessageContent').textContent)
     .contains('Missing credentials')
 })
 
 test('Login fails with "unknown username" error message', async (t) => {
   await t
-    .typeText('input[name="username"]', 'XXX')
-    .typeText('input[name="password"]', 'password')
-    .click('button[type="submit"]')
+    .typeText(ReactSelector('Input').withProps('name', 'username'), 'XXX')
+    .typeText(ReactSelector('Input').withProps('name', 'password'), 'XXX')
+    .click(ReactSelector('Button').withProps('type', 'submit'))
     .expect(ReactSelector('MessageContent').textContent)
     .contains('Unknown username')
 })
@@ -36,9 +36,9 @@ test
   })
   ('Login fails with "incorrect password" error message', async (t) => {
     await t
-      .typeText('input[name="username"]', 'mike86')
-      .typeText('input[name="password"]', 'incorrect password')
-      .click('button[type="submit"]')
+      .typeText(ReactSelector('Input').withProps('name', 'username'), 'mike86')
+      .typeText(ReactSelector('Input').withProps('name', 'password'), 'incorrect password')
+      .click(ReactSelector('Button').withProps('type', 'submit'))
       .expect(ReactSelector('MessageContent').textContent)
       .contains('Incorrect password')
   })

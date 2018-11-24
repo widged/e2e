@@ -12,18 +12,13 @@ export const signin = async () => {
     .click('button[type="submit"]')
 }
 
-export const randomString = (length: number = 10) => {
-  let string = ''
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (let i = 0; i < length; i += 1) {
-    string += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return string
-}
-
 export const createTestUser = () => {
-  t.ctx.username = `test_${randomString()}`
-  console.log('------------', t.ctx.username)
+  let randomString = ''
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  for (let i = 0; i < 10; i += 1) {
+    randomString += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  t.ctx.username = `test_${randomString}`
   return createTestUserApi(t.ctx.username)
 }
 
