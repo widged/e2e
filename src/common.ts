@@ -5,9 +5,9 @@ import {
   deleteTestUser as deleteTestUserApi,
 } from './services/user'
 
-export const signin = async () => {
+export const signin = async (username: string = t.ctx.username) => {
   return t
-    .typeText('input[name="username"]', t.ctx.username)
+    .typeText('input[name="username"]', username)
     .typeText('input[name="password"]', 'password')
     .click('button[type="submit"]')
 }

@@ -21,20 +21,21 @@ const createTodo = (message: string) => (
   t
     .click(ReactSelector('MenuItem').withProps('icon', 'plus'))
     .typeText(ReactSelector('TextArea'), message)
-    .click(ReactSelector('Button').withProps('primary', true))
+    .click(ReactSelector('ModalActions Button').withProps('primary', true))
 )
 
 test('Correct "No todo" and "No history" messages displayed when appropriate', async (t) => {
   await t.expect(ReactSelector('TodosPage_TodosPage').textContent).contains('No todos')
-  await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
-  await t.expect(ReactSelector('HistoryPage_HistoryPage').textContent).contains('No history')
+  await t
+    .click(ReactSelector('MenuItem').withProps('name', 'history'))
+    .expect(ReactSelector('HistoryPage_HistoryPage').textContent).contains('No history')
 })
 
 test('Create a todo', async (t) => {
   await createTodo('Buy some milk')
-  let todos = ReactSelector('Card')
+  let todos = ReactSelector('Todo')
   await t.expect(todos.count).eql(1)
-  await t.expect(todos.nth(0).textContent).contains('Buy some milk')
+  await t.expect(todos.textContent).contains('Buy some milk')
 
   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
   let historyItems = ReactSelector('HistoryItem')
@@ -45,7 +46,7 @@ test('Create a todo', async (t) => {
 
   await t.click(ReactSelector('MenuItem').withProps('name', 'todos'))
   await createTodo('Walk the dog')
-  todos = ReactSelector('Card')
+  todos = ReactSelector('Todo')
   await t.expect(todos.count).eql(2)
   await t.expect(todos.nth(1).textContent).contains('Walk the dog')
 
@@ -57,20 +58,51 @@ test('Create a todo', async (t) => {
   await t.expect(createdIcon.exists).ok()
 })
 
-// test('Delete a todo', async (t) => {
-//   let todo = ReactSelector('CardContent').filter(node => (
-//     !!(node.textContent && node.textContent.includes('testies'))
-//   ))
-//   await t.expect(todo.exists).ok()
-//   await t
-//     .click(todo.findReact('Button').withProps('icon', 'close'))
-//     .click(ReactSelector('Button').withProps('primary', true))
-//   todo = ReactSelector('CardContent').filter((node: Element) => (
-//     !!(node.textContent && node.textContent.includes('testies'))
-//   ))
-//   await t.expect(todo.exists).notOk()
-// })
-//
-// test('Send a todo', async (t) => {
-//
-// })
+test('Delete a todo', async (t) => {
+  await createTodo('Clean the apartment')
+  await t.expect(ReactSelector('Todo').count).eql(1)
+  await t
+    .click(ReactSelector('Todo DeleteTodoButton'))
+    .click(ReactSelector('ModalActions Button').withProps('primary', true))
+    .expect(ReactSelector('Todo').count).eql(0)
+  await t.expect(ReactSelector('TodosPage_TodosPage').textContent).contains('No todos')
+
+  await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
+  const historyItems = ReactSelector('HistoryItem')
+  await t.expect(historyItems.count).eql(2)
+  await t.expect(historyItems.nth(0).textContent).contains('You deleted a todo')
+  await t.expect(historyItems.nth(0).findReact('Icon').withProps('name', 'delete').exists).ok()
+  await t.expect(historyItems.nth(1).textContent).contains('You created a new todo')
+  await t.expect(historyItems.nth(1).findReact('Icon').withProps('name', 'checkmark').exists).ok()
+})
+
+test('Send a todo', async (t) => {
+  await createTodo('Get a haircut')
+  await t.expect(ReactSelector('Todo').count).eql(1)
+  await t
+    .click(ReactSelector('Todo SendTodoDropdown_SendTodoDropdown'))
+    .click(ReactSelector('DropdownMenu DropdownItem').withProps('content', 'Han Solo'))
+    .click(ReactSelector('ModalActions Button').withProps('primary', true))
+    .expect(ReactSelector('Todo').count).eql(0)
+
+  await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
+  let historyItems = ReactSelector('HistoryItem')
+  await t.expect(historyItems.count).eql(2)
+  await t.expect(historyItems.nth(0).textContent).contains('You sent a todo to Han Solo')
+  await t.expect(historyItems.nth(0).findReact('Icon').withProps('name', 'send').exists).ok()
+  await t.expect(historyItems.nth(1).textContent).contains('You created a new todo')
+  await t.expect(historyItems.nth(1).findReact('Icon').withProps('name', 'checkmark').exists).ok()
+
+  await t.click(ReactSelector('MenuItem').withProps('icon', 'sign-out'))
+  await signin(`${t.ctx.username}_friend`)
+
+  const todo = ReactSelector('Todo')
+  await t.expect(todo.count).eql(1)
+  await t.expect(todo.textContent).contains('Get a haircut')
+
+  await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
+  historyItems = ReactSelector('HistoryItem')
+  await t.expect(historyItems.count).eql(1)
+  await t.expect(historyItems.textContent).contains('You received a todo from Luke Skywalker')
+  await t.expect(historyItems.findReact('Icon').withProps('name', 'mail').exists).ok()
+})

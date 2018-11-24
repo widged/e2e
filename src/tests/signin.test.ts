@@ -36,7 +36,7 @@ test
   })
   ('Login fails with "incorrect password" error message', async (t) => {
     await t
-      .typeText(ReactSelector('Input').withProps('name', 'username'), 'mike86')
+      .typeText(ReactSelector('Input').withProps('name', 'username'), t.ctx.username)
       .typeText(ReactSelector('Input').withProps('name', 'password'), 'incorrect password')
       .click(ReactSelector('Button').withProps('type', 'submit'))
       .expect(ReactSelector('MessageContent').textContent)
