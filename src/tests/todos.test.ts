@@ -6,19 +6,6 @@
 //
 // const { baseUrl } = config
 //
-// const createTodo = (message: string) => (
-//   t
-//     .click(ReactSelector('MenuItem').withProps('icon', 'plus'))
-//     .typeText(ReactSelector('TextArea'), message)
-//     .click(ReactSelector('Button').withProps('primary', true))
-// )
-//
-// const getTodoWithMessage = (message: string) => (
-//   ReactSelector('CardContent').filter((node: Element) => (
-//     !!(node.textContent && node.textContent.includes(message))
-//   ))
-// )
-//
 // fixture('Todos')
 //   .page(baseUrl)
 //   .beforeEach(async () => {
@@ -30,16 +17,54 @@
 //     await deleteTestUser()
 //   })
 //
-// test('Create a todo', async (t) => {
-//   await t
+// const createTodo = (message: string) => (
+//   t
 //     .click(ReactSelector('MenuItem').withProps('icon', 'plus'))
-//     .typeText(ReactSelector('TextArea'), 'Create a todo - A')
+//     .typeText(ReactSelector('TextArea'), message)
 //     .click(ReactSelector('Button').withProps('primary', true))
-//     .expect(1).eql(1)
+// )
+//
+// const getElementContainingText = (element: string, message: string) => (
+//   ReactSelector('CardContent').filter((node: Element) => (
+//     !!(node.textContent && node.textContent.includes(message))
+//   ))
+// )
+//
+// test('Correct "No todo" and "No history" messages displayed when appropriate', async (t) => {
+//   const noTodosMessage = getElementContainingText('Segment', 'No todos')
+//   await t.expect(noTodosMessage.exists).ok()
+//   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
+//   const noHistoryMessage = getElementContainingText('Segment', 'No history')
+//   await t.expect(noHistoryMessage.exists).ok()
+// })
+//
+// test.only('Create a todo', async (t) => {
+//   await createTodo('Buy some milk')
+//   let todos = ReactSelector('Card')
+//   await t.expect(todos.count).eql(1)
+//
+//   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
+//   let historyItems = ReactSelector('HistoryItem')
+//   await t.expect(historyItems.count).eql(1)
+//   await t.expect(historyItems.nth(0).textContent).contains('You created a new todo')
+//   let createdIcon = historyItems.nth(0).findReact('Icon').withProps('name', 'checkmark')
+//   await t.expect(createdIcon.exists).ok()
+//
+//   await t.click(ReactSelector('MenuItem').withProps('name', 'todos'))
+//   await createTodo('Pick up Steph from the airport')
+//   todos = ReactSelector('Card')
+//   await t.expect(todos.count).eql(2)
+//
+//   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
+//   historyItems = ReactSelector('HistoryItem')
+//   await t.expect(historyItems.count).eql(2)
+//   await t.expect(historyItems.nth(0).textContent).contains('You created a new todo')
+//   createdIcon = historyItems.nth(0).findReact('Icon').withProps('name', 'checkmark')
+//   await t.expect(createdIcon.exists).ok()
 // })
 //
 // test('Delete a todo', async (t) => {
-//   let todo = ReactSelector('CardContent').filter((node: Element) => (
+//   let todo = ReactSelector('CardContent').filter(node => (
 //     !!(node.textContent && node.textContent.includes('testies'))
 //   ))
 //   await t.expect(todo.exists).ok()
