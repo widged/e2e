@@ -32,10 +32,11 @@ test('Correct "No todo" and "No history" messages displayed when appropriate', a
 })
 
 test('Create a todo', async (t) => {
-  await createTodo('Buy some milk')
+  const message1 = 'Have a chat with my Dad'
+  await createTodo(message1)
   let todos = ReactSelector('Todo')
   await t.expect(todos.count).eql(1)
-  await t.expect(todos.textContent).contains('Buy some milk')
+  await t.expect(todos.textContent).contains(message1)
 
   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
   let historyItems = ReactSelector('HistoryItem')
@@ -44,11 +45,12 @@ test('Create a todo', async (t) => {
   let createdIcon = historyItems.nth(0).findReact('Icon').withProps('name', 'checkmark')
   await t.expect(createdIcon.exists).ok()
 
+  const message2 = 'Get robes dry cleaned'
   await t.click(ReactSelector('MenuItem').withProps('name', 'todos'))
-  await createTodo('Walk the dog')
+  await createTodo(message2)
   todos = ReactSelector('Todo')
   await t.expect(todos.count).eql(2)
-  await t.expect(todos.nth(1).textContent).contains('Walk the dog')
+  await t.expect(todos.nth(1).textContent).contains(message2)
 
   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
   historyItems = ReactSelector('HistoryItem')
@@ -59,7 +61,7 @@ test('Create a todo', async (t) => {
 })
 
 test('Delete a todo', async (t) => {
-  await createTodo('Clean the apartment')
+  await createTodo('Join the dark side')
   await t.expect(ReactSelector('Todo').count).eql(1)
   await t
     .click(ReactSelector('Todo DeleteTodoButton'))
@@ -77,7 +79,8 @@ test('Delete a todo', async (t) => {
 })
 
 test('Send a todo', async (t) => {
-  await createTodo('Get a haircut')
+  const message = 'Befriend a wookie'
+  await createTodo(message)
   await t.expect(ReactSelector('Todo').count).eql(1)
   await t
     .click(ReactSelector('Todo SendTodoDropdown_SendTodoDropdown'))
@@ -94,11 +97,11 @@ test('Send a todo', async (t) => {
   await t.expect(historyItems.nth(1).findReact('Icon').withProps('name', 'checkmark').exists).ok()
 
   await t.click(ReactSelector('MenuItem').withProps('icon', 'sign-out'))
-  await signin(`${t.ctx.username}_friend`)
+  await signin(true)
 
   const todo = ReactSelector('Todo')
   await t.expect(todo.count).eql(1)
-  await t.expect(todo.textContent).contains('Get a haircut')
+  await t.expect(todo.textContent).contains(message)
 
   await t.click(ReactSelector('MenuItem').withProps('name', 'history'))
   historyItems = ReactSelector('HistoryItem')

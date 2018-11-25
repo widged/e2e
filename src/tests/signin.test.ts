@@ -22,8 +22,8 @@ test('Login fails with "missing credentials" error message', async (t) => {
 
 test('Login fails with "unknown username" error message', async (t) => {
   await t
-    .typeText(ReactSelector('Input').withProps('name', 'username'), 'XXX')
-    .typeText(ReactSelector('Input').withProps('name', 'password'), 'XXX')
+    .typeText(ReactSelector('Input').withProps('name', 'username'), 'XXXXXXXXXXXXX')
+    .typeText(ReactSelector('Input').withProps('name', 'password'), 'XXXXXXXXXXXXX')
     .click(ReactSelector('Button').withProps('type', 'submit'))
     .expect(ReactSelector('MessageContent').textContent)
     .contains('Unknown username')
@@ -37,7 +37,7 @@ test
   ('Login fails with "incorrect password" error message', async (t) => {
     await t
       .typeText(ReactSelector('Input').withProps('name', 'username'), t.ctx.username)
-      .typeText(ReactSelector('Input').withProps('name', 'password'), 'incorrect password')
+      .typeText(ReactSelector('Input').withProps('name', 'password'), 'XXXXXXXXXXXXX')
       .click(ReactSelector('Button').withProps('type', 'submit'))
       .expect(ReactSelector('MessageContent').textContent)
       .contains('Incorrect password')

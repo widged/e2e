@@ -1,15 +1,17 @@
 import { t } from 'testcafe'
+import { ReactSelector } from 'testcafe-react-selectors'
 
 import {
   createTestUser as createTestUserApi,
   deleteTestUser as deleteTestUserApi,
 } from './services/user'
 
-export const signin = async (username: string = t.ctx.username) => {
+export const signin = async (asFriend: boolean = false) => {
+  const username = t.ctx.username + (asFriend ? '_friend' : '')
   return t
-    .typeText('input[name="username"]', username)
-    .typeText('input[name="password"]', 'password')
-    .click('button[type="submit"]')
+    .typeText(ReactSelector('Input').withProps('name', 'username'), username)
+    .typeText(ReactSelector('Input').withProps('name', 'password'), 'password')
+    .click(ReactSelector('Button').withProps('type', 'submit'))
 }
 
 export const createTestUser = () => {
