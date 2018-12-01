@@ -57,7 +57,7 @@ test
       .expect(getLocation())
       .eql(`${baseUrl}/home/todos`)
       .expect(ReactSelector('Image').withProps('avatar', true).getAttribute('src'))
-      .eql('https://i.imgur.com/tJMeWCe.png')
+      .eql('https://i.imgur.com/gwy9tVn.png')
   })
   .after(async () => {
     await deleteTestUser()
